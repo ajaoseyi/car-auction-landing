@@ -1,0 +1,487 @@
+.root {
+  position: relative;
+  min-height: 100vh;
+  background: #fff;
+  overflow-x: clip;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Splash */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #ffd60a;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+  box-shadow: 0 30px 60px -20px rgba(255, 214, 10, 0.8);
+}
+
+.splashWord {
+  position: absolute;
+  left: 50%;
+  bottom: -0.2em;
+  transform: translateX(-50%);
+  font: 700 clamp(180px, 34vw, 520px) / 0.8 "Bricolage Grotesque";
+  letter-spacing: -0.06em;
+  color: #f5c800;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.splashAnim {
+  position: relative;
+  width: min(80vw, 480px);
+  aspect-ratio: 600 / 240;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(20px, 5vw, 64px);
+  background: linear-gradient(#fff 40%, rgba(255, 255, 255, 0));
+}
+
+.brand,
+.brand:hover {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #121212;
+}
+
+.mark {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.markHandle {
+  position: absolute;
+  left: 13.7px;
+  top: 21.6px;
+  width: 8.6px;
+  height: 26px;
+  border-radius: 9px;
+  background: #121212;
+  transform: rotate(38deg);
+  transform-origin: 50% 0;
+}
+
+.markDot {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffd60a;
+}
+
+.wordmark {
+  font: 700 26px/1 "Bricolage Grotesque";
+  letter-spacing: -0.05em;
+  color: #121212;
+}
+
+.navCta,
+.navCta:hover {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 18px;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+  text-decoration: none;
+  font: 600 14px "Bricolage Grotesque";
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.45);
+}
+
+.navArrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffd60a;
+  color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 14px "Clash Grotesk";
+}
+
+.ctaArrowLg {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffd60a;
+  color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 18px "Clash Grotesk";
+}
+
+/* Main */
+.main {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px);
+  pointer-events: none;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+  padding: 120px 0 80px;
+  box-sizing: border-box;
+  max-width: 640px;
+}
+
+.badge {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  font: 500 13px "Clash Grotesk";
+  box-shadow: 0 12px 30px -14px rgba(255, 90, 54, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.badgeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff5a36;
+}
+
+.h1 {
+  margin: 0;
+  font: 600 clamp(50px, 7.6vw, 112px) / 0.94 "Bricolage Grotesque";
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.hlWrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hl {
+  position: absolute;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: 0.06em;
+  height: 0.36em;
+  border-radius: 0.1em;
+  background: #ffd60a;
+  transform-origin: left center;
+  transform: scaleX(0);
+  box-shadow: 0 0.2em 0.4em -0.15em rgba(255, 214, 10, 0.75);
+}
+
+.hlText {
+  position: relative;
+}
+
+.lead {
+  margin: 0;
+  max-width: 500px;
+  font: 400 clamp(18px, 1.6vw, 21px) / 1.5 "Bricolage Grotesque";
+  color: #6b6a65;
+  text-wrap: pretty;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  pointer-events: auto;
+}
+
+.heroCta,
+.heroCta:hover {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 8px 26px;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+  text-decoration: none;
+  font: 600 17px "Bricolage Grotesque";
+  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.5);
+}
+
+.hint {
+  font: 500 13px "Clash Grotesk";
+  color: #9a9993;
+}
+
+.step {
+  min-height: 110vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  max-width: 600px;
+}
+
+.eyebrow {
+  font: 500 13px "Clash Grotesk";
+  color: #9a9993;
+  letter-spacing: 0.08em;
+}
+
+.h2 {
+  margin: 0;
+  font: 600 clamp(42px, 6vw, 88px) / 0.96 "Bricolage Grotesque";
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.body {
+  margin: 0;
+  max-width: 460px;
+  font: 400 19px/1.5 "Bricolage Grotesque";
+  color: #6b6a65;
+  text-wrap: pretty;
+}
+
+/* Join */
+.join {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  max-width: 560px;
+  padding: 120px 0 60px;
+  box-sizing: border-box;
+}
+
+.joinTitle {
+  font-size: clamp(42px, 5.6vw, 80px);
+}
+
+.card {
+  pointer-events: auto;
+  background: #fff;
+  border-radius: 30px;
+  padding: clamp(18px, 2.4vw, 26px);
+  box-shadow: 0 40px 80px -40px rgba(255, 214, 10, 0.75), -30px 30px 70px -40px rgba(167, 139, 250, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardText {
+  font: 400 15px/1.5 "Bricolage Grotesque";
+  color: #6b6a65;
+}
+
+.waBtn,
+.waBtn:hover {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  padding: 0 6px 0 24px;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+  text-decoration: none;
+  font: 600 16px "Bricolage Grotesque";
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+}
+
+.waBtnTall,
+.waBtnTall:hover {
+  height: 60px;
+  padding: 0 7px 0 24px;
+}
+
+.waLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.waDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #34d399;
+}
+
+.or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 500 12px "Clash Grotesk";
+  color: #9a9993;
+  letter-spacing: 0.08em;
+}
+
+.orLine {
+  flex: 1;
+  height: 1px;
+  background: #ecebe6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 58px;
+  border-radius: 999px;
+  background: #f5f4f0;
+}
+
+.field:focus-within {
+  box-shadow: 0 0 0 2px #121212;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  padding: 0 8px 0 22px;
+  font: 500 16px "Clash Grotesk";
+  color: #121212;
+  box-sizing: border-box;
+}
+
+.submit {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  margin-right: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: #121212;
+  color: #ffd60a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 18px "Clash Grotesk";
+  cursor: pointer;
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+}
+
+.submit:active {
+  transform: scale(0.94);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.error {
+  padding-left: 22px;
+  font: 500 13px "Clash Grotesk";
+  color: #e2462a;
+}
+
+.done {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.doneCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.doneEyebrow {
+  font: 500 12px "Clash Grotesk";
+  color: #9a9993;
+  letter-spacing: 0.08em;
+}
+
+.doneTitle {
+  font: 600 30px/1.05 "Bricolage Grotesque";
+  letter-spacing: -0.03em;
+}
+
+.paddleCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.paddleLabel {
+  font: 400 12px "Clash Grotesk";
+  color: #6b6a65;
+}
+
+.paddleNo {
+  font: 600 40px/1 "Clash Grotesk";
+  letter-spacing: -0.03em;
+}
+
+.reset {
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: 500 13px "Clash Grotesk";
+  color: #6b6a65;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  font: 500 12px "Clash Grotesk";
+  color: #9a9993;
+}

@@ -1,0 +1,23 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  color: #121212;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: #121212;
+}
+
+a:hover {
+  color: #6b6a65;
+}
+
+input::placeholder {
+  color: #9a9993;
+}
