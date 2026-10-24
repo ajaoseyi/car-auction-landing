@@ -1,0 +1,208 @@
+.root {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header — mirrors the landing page header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(20px, 5vw, 64px);
+  background: linear-gradient(#fff 60%, rgba(255, 255, 255, 0));
+}
+
+.brand,
+.brand:hover {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #121212;
+}
+
+.mark {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.markHandle {
+  position: absolute;
+  left: 13.7px;
+  top: 21.6px;
+  width: 8.6px;
+  height: 26px;
+  border-radius: 9px;
+  background: #121212;
+  transform: rotate(38deg);
+  transform-origin: 50% 0;
+}
+
+.markDot {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffd60a;
+}
+
+.wordmark {
+  font: 700 26px/1 "Bricolage Grotesque";
+  letter-spacing: -0.05em;
+  color: #121212;
+}
+
+.navCta,
+.navCta:hover {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 18px;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+  text-decoration: none;
+  font: 600 14px "Bricolage Grotesque";
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.45);
+}
+
+.navArrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffd60a;
+  color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 14px "Clash Grotesk";
+}
+
+/* Body */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vw, 96px) clamp(20px, 5vw, 64px) 80px;
+  box-sizing: border-box;
+}
+
+.eyebrow {
+  font: 500 13px "Clash Grotesk";
+  color: #9a9993;
+  letter-spacing: 0.08em;
+}
+
+.h1 {
+  margin: 18px 0 22px;
+  font: 600 clamp(44px, 6vw, 80px) / 0.96 "Bricolage Grotesque";
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.intro {
+  margin: 0 0 48px;
+  font: 400 clamp(18px, 1.6vw, 20px) / 1.5 "Bricolage Grotesque";
+  color: #6b6a65;
+  text-wrap: pretty;
+}
+
+.article {
+  font: 400 16px/1.65 "Bricolage Grotesque";
+  color: #3a3935;
+}
+
+.article h2 {
+  margin: 44px 0 12px;
+  font: 600 26px/1.15 "Bricolage Grotesque";
+  letter-spacing: -0.03em;
+  color: #121212;
+}
+
+.article h3 {
+  margin: 24px 0 8px;
+  font: 600 18px/1.3 "Bricolage Grotesque";
+  color: #121212;
+}
+
+.article p {
+  margin: 0 0 14px;
+  text-wrap: pretty;
+}
+
+.article ul {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.article li {
+  margin-bottom: 6px;
+}
+
+.article li::marker {
+  color: #f5c800;
+}
+
+.article strong {
+  font-weight: 600;
+  color: #121212;
+}
+
+.article a {
+  text-decoration-color: #ffd60a;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.actionBtn,
+.actionBtn:hover {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 7px 7px 7px 22px;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+  text-decoration: none;
+  font: 600 16px "Bricolage Grotesque";
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 24px clamp(20px, 5vw, 64px);
+  border-top: 1px solid #ecebe6;
+  font: 500 12px "Clash Grotesk";
+  color: #9a9993;
+}
+
+.footerNav {
+  display: flex;
+  gap: 18px;
+}
+
+.footerNav a {
+  color: #9a9993;
+  text-decoration: none;
+}
+
+.footerNav a:hover {
+  color: #121212;
+}

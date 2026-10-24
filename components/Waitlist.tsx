@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import Link from "next/link";
 import type { AnimationItem } from "lottie-web";
 import type { WaitlistScene } from "@/lib/waitlistScene";
 import { joinWaitlist } from "@/lib/waitlistApi";
@@ -243,6 +244,9 @@ export default function Waitlist({ whatsappUrl = "https://chat.whatsapp.com/", g
                     </button>
                   </div>
                   {error && <span className={styles.error}>{error}</span>}
+                  <span className={styles.legalNote}>
+                    By joining you agree to our <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy Policy</Link>.
+                  </span>
                 </form>
               </>
             ) : (
@@ -269,6 +273,10 @@ export default function Waitlist({ whatsappUrl = "https://chat.whatsapp.com/", g
           <div className={styles.footer}>
             <span>© Carlot</span>
             <span>Trusted cars from abroad, for first-time buyers in Nigeria</span>
+            <nav className={styles.footerNav}>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </nav>
           </div>
         </section>
       </main>

@@ -485,3 +485,29 @@
   font: 500 12px "Clash Grotesk";
   color: #9a9993;
 }
+
+/* .main disables pointer events so the 3D stage gets them; links opt back in. */
+.footerNav {
+  display: flex;
+  gap: 18px;
+  pointer-events: auto;
+}
+
+.footerNav a {
+  color: #9a9993;
+  text-decoration: none;
+}
+
+.footerNav a:hover {
+  color: #121212;
+}
+
+.legalNote {
+  padding-left: 22px;
+  font: 400 12px/1.5 "Clash Grotesk";
+  color: #9a9993;
+}
+
+.legalNote a {
+  color: #6b6a65;
+}
