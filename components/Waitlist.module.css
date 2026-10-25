@@ -511,3 +511,36 @@
 .legalNote a {
   color: #6b6a65;
 }
+
+/* Mobile: the paddle sits at the top of the stage; instead of stacking the copy
+   below it, fade the paddle's handle into a white wash that the text sits on. */
+@media (max-width: 819px) {
+  .root::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 24vh;
+    height: 34vh;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(rgba(255, 255, 255, 0), #fff 70%);
+  }
+
+  .root::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: calc(24vh + 34vh);
+    bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: #fff;
+  }
+
+  .hero {
+    justify-content: flex-start;
+    padding-top: 30vh;
+  }
+}
