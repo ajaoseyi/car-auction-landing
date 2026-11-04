@@ -383,9 +383,6 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
               <a href="#rent" onClick={() => pickTab("vehicles")} className={styles.btnDark}>
                 Rent a car<span className={styles.circle46}><Icon name="car" /></span>
               </a>
-              <a href="#rent" onClick={() => pickTab("boats")} className={styles.btnLight}>
-                Charter a boat<span className={`${styles.circle46} ${styles.circleMist}`}><Icon name="sailboat" /></span>
-              </a>
             </div>
           </div>
           <div data-reveal="" className={styles.heroVisual}>
@@ -498,9 +495,6 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
             <div className={styles.joinActions}>
               <a href="#rent" onClick={() => pickTab("vehicles")} className={styles.btnDark}>
                 Rent a car<span className={styles.circle46}><Icon name="car" /></span>
-              </a>
-              <a href="#rent" onClick={() => pickTab("boats")} className={styles.btnLight}>
-                Charter a boat<span className={`${styles.circle46} ${styles.circleMist}`}><Icon name="sailboat" /></span>
               </a>
             </div>
             {signedIn && <Link href="/bookings" className={styles.reset}>View my bookings</Link>}
