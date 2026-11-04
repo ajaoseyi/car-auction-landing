@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Carlot — Your first car is no longer a dream",
-  description: "Trusted cars from the USA, UK and Canada, auctioned at prices you can save for. Join the Carlot waitlist.",
+  title: "Carlot — Car & Boat Rentals in Lagos",
+  description: "Rent a car with a driver or a boat with a captain in Lagos. Pick your hours, see the price upfront and pay once. Clean rides, booked in minutes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

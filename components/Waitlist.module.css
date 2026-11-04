@@ -520,11 +520,11 @@
     position: fixed;
     left: 0;
     right: 0;
-    top: 24vh;
-    height: 34vh;
+    top: 16vh;
+    height: 26vh;
     z-index: 1;
     pointer-events: none;
-    background: linear-gradient(rgba(255, 255, 255, 0), #fff 70%);
+    background: linear-gradient(rgba(255, 255, 255, 0), #fff 85%);
   }
 
   .root::before {
@@ -532,7 +532,7 @@
     position: fixed;
     left: 0;
     right: 0;
-    top: calc(24vh + 34vh);
+    top: calc(16vh + 26vh);
     bottom: 0;
     z-index: 1;
     pointer-events: none;
@@ -541,6 +541,6 @@
 
   .hero {
     justify-content: flex-start;
-    padding-top: 30vh;
+    padding-top: 32vh;
   }
 }

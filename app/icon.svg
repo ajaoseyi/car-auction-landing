@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -1.5 46 46">
+  <style>
+    .ink { fill: #121212; }
+    .handle { stroke: #121212; }
+    @media (prefers-color-scheme: dark) { .ink { fill: #ffffff; } .handle { stroke: #ffffff; } }
+  </style>
+  <line class="handle" x1="15.35" y1="24.99" x2="4.64" y2="38.70" stroke-width="8.6" stroke-linecap="round"/>
+  <circle class="ink" cx="18" cy="18" r="18"/>
+  <circle cx="18" cy="18" r="6.5" fill="#ffd60a"/>
+</svg>

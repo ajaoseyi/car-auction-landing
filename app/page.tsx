@@ -1,5 +1,5 @@
-import Waitlist from "@/components/Waitlist";
+import Site from "@/components/Site";
 
 export default function Home() {
-  return <Waitlist whatsappUrl="https://chat.whatsapp.com/BmyEcQPLlamFl8uIgHjEGw" />;
+  return <Site whatsappUrl="https://chat.whatsapp.com/BmyEcQPLlamFl8uIgHjEGw" />;
 }

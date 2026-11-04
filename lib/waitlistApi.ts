@@ -1,5 +1,5 @@
 // Talks to car-auction-app-backend (POST /v1/waitlist). The API's CORS_ORIGINS must include this site's origin.
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000").replace(/\/$/, "");
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://lotline-api.57-129-139-194.sslip.io").replace(/\/$/, "");
 
 export type JoinResult = { paddleNo: number; created: boolean };
 
