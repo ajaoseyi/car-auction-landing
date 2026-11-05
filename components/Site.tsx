@@ -57,7 +57,8 @@ type Item = {
 
 const f = (n: number) => "₦" + n.toLocaleString("en-US");
 const vRows = (c: (number | null)[]): RateRow[] => [["Airport (1–3 hrs)", c[0], c[1], null], ["6 hours", c[2], c[3], null], ["12 hours", c[4], c[5], null], ["24 hours", c[6], c[7], c[8] ?? ON_REQUEST]];
-const bRows = (c: (number | null)[]): RateRow[] => [["2 hours", c[0]], ["3 hours", c[1]], ["4 hours", c[2]], ["Full day (8 hrs)", c[3]]];
+// Boats hidden from the landing page for now.
+// const bRows = (c: (number | null)[]): RateRow[] => [["2 hours", c[0]], ["3 hours", c[1]], ["4 hours", c[2]], ["Full day (8 hrs)", c[3]]];
 const HOT: [string, string, string] = ["HOT", "#FF5A36", "#fff"], NEW: [string, string, string] = ["NEW", "#FFD60A", "#121212"];
 
 const V: Item[] = [
@@ -68,19 +69,24 @@ const V: Item[] = [
   { slug: "lexus-lx600", key: "lx600", src: "/lexus-lx600-sm.jpg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Lexus LX600", meta: "Island, outskirts", badge: NEW, rows: vRows([790000, 890000, 790000, 890000, 1150000, 1380000, 1840000, 2070000, null]) },
 ].map(x => ({ ...x, isV: true }));
 
+/* Boats hidden from the landing page for now.
 const B: Item[] = [
   { slug: "azimut-42-flybridge", key: "azimut", src: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=900&q=70&auto=format&fit=crop", credit: "Photo: Marcin Ciszewski / Unsplash", creditHref: "https://unsplash.com/@collega", tag: "Yacht · 12 guests", extra: "Captain & crew", name: "Azimut 42 Flybridge", meta: "Lekki Jetty · min. 2 hrs", badge: HOT, rows: bRows([1500000, 2100000, 2600000, 4800000]) },
   { slug: "sea-ray-280-slx", key: "searay", src: "https://images.unsplash.com/photo-1604737637145-48cc31d160eb?w=900&q=70&auto=format&fit=crop", credit: "Photo: Carles Rabada / Unsplash", creditHref: "https://unsplash.com/@carlesrgm", tag: "Speedboat · 8 guests", extra: "Captain included", name: "Sea Ray 280 SLX", meta: "Ikoyi Marina · min. 2 hrs", rows: bRows([350000, 500000, 640000, 1200000]) },
   { slug: "princess-52-cruiser", key: "princess", src: "https://images.unsplash.com/photo-1562281302-809108fd533c?w=900&q=70&auto=format&fit=crop", credit: "Photo: Eugene Chystiakov / Unsplash", creditHref: "https://unsplash.com/@eugenechystiakov", tag: "Cruiser · 15 guests", extra: "Captain & crew", name: "Princess 52 Cruiser", meta: "Victoria Island · min. 3 hrs", badge: NEW, rows: bRows([null, 2700000, 3400000, 6200000]) },
 ];
+*/
 
 const minOf = (x: Item) => Math.min(...x.rows.flatMap(r => r.slice(1)).filter((v): v is number => typeof v === "number"));
 
 const STEPS = [
-  { n: "01", t: "Pick a car or boat", d: "Every car comes with a driver. Every boat comes with a captain.", tag: "Driver or captain", icon: "car", tagIcon: "user-round", dot: "#FFD60A", glow: "rgba(255,214,10,.9)" },
+  // { n: "01", t: "Pick a car or boat", d: "Every car comes with a driver. Every boat comes with a captain.", tag: "Driver or captain", icon: "car", tagIcon: "user-round", dot: "#FFD60A", glow: "rgba(255,214,10,.9)" },
+  { n: "01", t: "Pick a car", d: "Every car comes with a driver.", tag: "Driver included", icon: "car", tagIcon: "user-round", dot: "#FFD60A", glow: "rgba(255,214,10,.9)" },
   { n: "02", t: "Choose dates and hours", d: "Book from 1 hour up to 7 days. The price updates as you go.", tag: "1 hr to 7 days", icon: "calendar-clock", tagIcon: "clock", dot: "#BFDBFE", glow: "rgba(96,165,250,.7)" },
-  { n: "03", t: "Set your pickup", d: "Island, outskirts or interstate. Boats leave from the jetty.", tag: "Island · Outskirts · Interstate", icon: "map-pin", tagIcon: "route", dot: "#DDD6FE", glow: "rgba(167,139,250,.7)" },
-  { n: "04", t: "Pay once. Ride clean.", d: "Pay securely with Paystack. Your driver or captain messages you before pickup.", tag: "No hidden fees", icon: "credit-card", tagIcon: "badge-check", dot: "#A7F3D0", glow: "rgba(52,211,153,.7)" },
+  // { n: "03", t: "Set your pickup", d: "Island, outskirts or interstate. Boats leave from the jetty.", tag: "Island · Outskirts · Interstate", icon: "map-pin", tagIcon: "route", dot: "#DDD6FE", glow: "rgba(167,139,250,.7)" },
+  { n: "03", t: "Set your pickup", d: "Island, outskirts or interstate.", tag: "Island · Outskirts · Interstate", icon: "map-pin", tagIcon: "route", dot: "#DDD6FE", glow: "rgba(167,139,250,.7)" },
+  // d: "Pay securely with Paystack. Your driver or captain messages you before pickup."
+  { n: "04", t: "Pay once. Ride clean.", d: "Pay securely with Paystack. Your driver messages you before pickup.", tag: "No hidden fees", icon: "credit-card", tagIcon: "badge-check", dot: "#A7F3D0", glow: "rgba(52,211,153,.7)" },
 ];
 
 function RatesDialog({ sel, onClose }: { sel: Item; onClose: () => void }) {
@@ -189,7 +195,8 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
   const [splash, setSplash] = useState<SplashPhase>("in");
   // Cards follow the Dec 2026 rate card; each one opens the booking flow, which prices from the API.
   const fleetV = V;
-  const fleetB = B;
+  // const fleetB = B;
+  const fleetB: Item[] = []; // Boats hidden from the landing page for now.
   const { user } = useAuth();
   const signedIn = isRegistered(user);
 
@@ -277,7 +284,7 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
         </a>
         <nav className={styles.nav}>
           <a href="#rent" onClick={() => pickTab("vehicles")} className={styles.navLink}><Icon name="car" />Cars</a>
-          <a href="#rent" onClick={() => pickTab("boats")} className={styles.navLink}><Icon name="sailboat" />Boats</a>
+          {/* <a href="#rent" onClick={() => pickTab("boats")} className={styles.navLink}><Icon name="sailboat" />Boats</a> */}
           <a href="#how" className={styles.navLink}><Icon name="list-ordered" />How it works</a>
           {showAuctions && <a href="#auctions" className={styles.navLink}><Icon name="gavel" />Auctions</a>}
         </nav>
@@ -295,9 +302,12 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
       <main id="top" ref={mainEl} className={styles.main}>
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
-            <span data-reveal="" className={styles.pill}><Icon name="map-pin" />Car &amp; boat rentals · Lagos</span>
-            <h1 data-reveal="" className={styles.h1}>Book a car or a boat. <Hl>Ride clean.</Hl></h1>
-            <p data-reveal="" className={styles.lead}>Fresh cars with a driver. Boats with a captain. Pick your hours, see the price, pay once. No hidden fees.</p>
+            {/* <span data-reveal="" className={styles.pill}><Icon name="map-pin" />Car &amp; boat rentals · Lagos</span> */}
+            <span data-reveal="" className={styles.pill}><Icon name="map-pin" />Car rentals · Lagos</span>
+            {/* <h1 data-reveal="" className={styles.h1}>Book a car or a boat. <Hl>Ride clean.</Hl></h1> */}
+            <h1 data-reveal="" className={styles.h1}>Book a car. <Hl>Ride clean.</Hl></h1>
+            {/* <p data-reveal="" className={styles.lead}>Fresh cars with a driver. Boats with a captain. Pick your hours, see the price, pay once. No hidden fees.</p> */}
+            <p data-reveal="" className={styles.lead}>Fresh cars with a driver. Pick your hours, see the price, pay once. No hidden fees.</p>
             <div data-reveal="" className={styles.heroActions}>
               <a href="#rent" onClick={() => pickTab("vehicles")} className={styles.btnDark}>
                 Rent a car<span className={styles.circle46}><Icon name="car" /></span>
@@ -313,15 +323,16 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
           <div className={styles.sectionHead}>
             <div className={styles.headCol}>
               <span data-reveal="" className={styles.eyebrow}>01 · THE FLEET</span>
-              <h2 data-reveal="" className={styles.h2}>On the road or on the <Hl>water.</Hl></h2>
+              {/* <h2 data-reveal="" className={styles.h2}>On the road or on the <Hl>water.</Hl></h2> */}
+              <h2 data-reveal="" className={styles.h2}>Ready for the <Hl>road.</Hl></h2>
             </div>
             <div data-reveal="" className={styles.tabs}>
               <button type="button" onClick={() => pickTab("vehicles")} className={`${styles.tab} ${isV ? styles.tabOn : ""}`}>
                 <Icon name="car" />Vehicles<span className={styles.tabCount}>{fleetV.length}</span>
               </button>
-              <button type="button" onClick={() => pickTab("boats")} className={`${styles.tab} ${!isV ? styles.tabOn : ""}`}>
+              {/* <button type="button" onClick={() => pickTab("boats")} className={`${styles.tab} ${!isV ? styles.tabOn : ""}`}>
                 <Icon name="sailboat" />Boats<span className={styles.tabCount}>{fleetB.length}</span>
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -410,7 +421,8 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
           <h2 data-reveal="" className={`${styles.h2} ${styles.joinTitle}`}>Your ride is a few taps <Hl>away.</Hl></h2>
 
           <div data-reveal="" className={styles.joinCard}>
-            <span className={styles.cardText}>Pick a car with a driver or a boat with a captain, choose your hours and pay securely with Paystack.</span>
+            {/* <span className={styles.cardText}>Pick a car with a driver or a boat with a captain, choose your hours and pay securely with Paystack.</span> */}
+            <span className={styles.cardText}>Pick a car with a driver, choose your hours and pay securely with Paystack.</span>
             <div className={styles.joinActions}>
               <a href="#rent" onClick={() => pickTab("vehicles")} className={styles.btnDark}>
                 Rent a car<span className={styles.circle46}><Icon name="car" /></span>
@@ -418,13 +430,15 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
             </div>
             {signedIn && <Link href="/bookings" className={styles.reset}>View my bookings</Link>}
             <div className={styles.or}><span className={styles.orLine} />UPDATES<span className={styles.orLine} /></div>
-            <span className={styles.cardText}>New cars and boats, launch rates and auction dates land in the WhatsApp group first.</span>
+            {/* <span className={styles.cardText}>New cars and boats, launch rates and auction dates land in the WhatsApp group first.</span> */}
+            <span className={styles.cardText}>New cars, launch rates and auction dates land in the WhatsApp group first.</span>
             <WhatsAppButton href={whatsappUrl} />
           </div>
 
           <div className={styles.footer}>
             <span>© Carlot</span>
-            <span>Car and boat rentals in Lagos. Car auctions too.</span>
+            {/* <span>Car and boat rentals in Lagos. Car auctions too.</span> */}
+            <span>Car rentals in Lagos. Car auctions too.</span>
             <nav className={styles.footerNav}>
               <Link href="/privacy">Privacy</Link>
               <Link href="/terms">Terms</Link>
