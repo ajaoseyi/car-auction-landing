@@ -33,13 +33,13 @@ export const FALLBACK_FLEET: RentalListing[] = [
     rates: { airport: { island: 120000, outskirts: 170000 }, h6: { island: 120000, outskirts: 170000 }, h12: { island: 170000, outskirts: 220000 }, h24: { island: 270000, outskirts: 320000, interstate: 350000 } },
   }),
   vehicle({
-    slug: "toyota-hilux",
-    name: "Toyota Hilux",
-    shortName: "Hilux",
+    slug: "toyota-tacoma",
+    name: "Toyota Tacoma",
+    shortName: "Tacoma",
     tag: "Pickup · 5 seats",
-    specs: "Pickup · 5 seats · Double cab",
+    specs: "Pickup · 5 seats · TRD · Double cab",
     badge: null,
-    images: ["/rentals/toyota-hilux-front34.jpeg"],
+    images: ["side", "front", "rear", "rear34"].map((n) => `/rentals/toyota-tacoma-${n}.jpeg`),
     rates: { airport: { island: 170000, outskirts: 220000 }, h6: { island: 170000, outskirts: 220000 }, h12: { island: 240000, outskirts: 440000 }, h24: { island: 580000, outskirts: 680000, interstate: 780000 } },
   }),
   vehicle({

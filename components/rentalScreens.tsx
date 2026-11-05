@@ -113,7 +113,7 @@ export function RentalsScreen({ T, C }: ScreenProps) {
   const glow = MOTION.enter(T, t0 + 3.9, 0.4);
   const cards: Card[] = [
     { img: img("prado-front"), tag: "SUV · 7 seats", name: "Toyota Land Cruiser Prado TX-L", badge: ["HOT", CORAL, "#fff"] },
-    { credit: "Isaac Mitchell", img: "https://images.unsplash.com/photo-1641333326784-24a9c21d3c4e?w=900&q=70&auto=format&fit=crop", tag: "Pickup · 5 seats", name: "Toyota Hilux", badge: ["NEW", YEL, INK] },
+    { img: img("toyota-tacoma-side"), tag: "Pickup · 5 seats", name: "Toyota Tacoma", badge: ["NEW", YEL, INK] },
     { credit: "Tim Vegas", img: "https://images.unsplash.com/photo-1650530579355-7ad9d4766043?w=900&q=70&auto=format&fit=crop", tag: "SUV · 7 seats", name: "Toyota Land Cruiser" },
   ];
   return (

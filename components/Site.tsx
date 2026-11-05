@@ -62,7 +62,7 @@ const HOT: [string, string, string] = ["HOT", "#FF5A36", "#fff"], NEW: [string, 
 
 const V: Item[] = [
   { slug: "toyota-prado-txl", key: "prado", src: "/rentals/prado-front.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Toyota Land Cruiser Prado TX-L", meta: "Island, outskirts, interstate", badge: HOT, rows: vRows([120000, 170000, 120000, 170000, 170000, 220000, 270000, 320000, 350000]) },
-  { slug: "toyota-hilux", key: "hilux", src: "/rentals/toyota-hilux-front34.jpeg", tag: "Pickup · 5 seats", extra: "Fresh · driver", name: "Toyota Hilux", meta: "Island, outskirts, interstate", rows: vRows([170000, 220000, 170000, 220000, 240000, 440000, 580000, 680000, 780000]) },
+  { slug: "toyota-tacoma", key: "tacoma", src: "/rentals/toyota-tacoma-side.jpeg", tag: "Pickup · 5 seats", extra: "Fresh · driver", name: "Toyota Tacoma", meta: "Island, outskirts, interstate", rows: vRows([170000, 220000, 170000, 220000, 240000, 440000, 580000, 680000, 780000]) },
   { slug: "lexus-gx460", key: "gx460", src: "/rentals/lexus-gx460-front34.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Lexus GX460", meta: "Island, outskirts", badge: NEW, rows: vRows([170000, 230000, 170000, 230000, 230000, 340000, 400000, 460000, null]) },
   { slug: "cadillac-escalade", key: "escalade", src: "/rentals/cadillac-escalade-front.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Cadillac Escalade", meta: "Island, outskirts", badge: NEW, rows: vRows([690000, 790000, 690000, 790000, 920000, 1040000, 1610000, 1840000, null]) },
   { slug: "lexus-lx600", key: "lx600", src: "/lexus-lx600-sm.jpg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Lexus LX600", meta: "Island, outskirts", badge: NEW, rows: vRows([790000, 890000, 790000, 890000, 1150000, 1380000, 1840000, 2070000, null]) },
@@ -137,13 +137,6 @@ function RatesDialog({ sel, onClose }: { sel: Item; onClose: () => void }) {
 // ---------- Motion helpers (Web Animations, run after the splash) ----------
 type Anim = Animation & { _d?: number };
 
-function ripple(x: number, y: number, size = 30) {
-  const r = document.createElement("span");
-  r.style.cssText = `position:fixed;left:${x - size / 2}px;top:${y - size / 2}px;width:${size}px;height:${size}px;border-radius:50%;border:2px solid #FFD60A;box-sizing:border-box;pointer-events:none;z-index:299`;
-  document.body.appendChild(r);
-  r.animate([{ transform: "scale(1)", opacity: 1 }, { transform: "scale(2.8)", opacity: 0 }], { duration: 650, easing: E.enter }).onfinish = () => r.remove();
-}
-
 function revealAll(root: HTMLElement): IntersectionObserver {
   const groups = new Map<Element, Anim[]>();
   const add = (trig: Element, el: Element, kf: Keyframe[], o: KeyframeAnimationOptions) => {
@@ -190,50 +183,6 @@ function revealAll(root: HTMLElement): IntersectionObserver {
   return io;
 }
 
-// Paddle-shaped custom cursor with a yellow ripple on click (fine pointers only).
-function setupCursor(): (() => void) | undefined {
-  if (!matchMedia("(pointer:fine)").matches || reduced()) return;
-  const st = document.createElement("style");
-  st.textContent = "html,body,a,button,label,[role=button]{cursor:none!important}input,textarea{cursor:text!important}";
-  document.head.appendChild(st);
-  const w = document.createElement("div");
-  w.setAttribute("aria-hidden", "true");
-  w.style.cssText = "position:fixed;left:0;top:0;z-index:300;pointer-events:none;opacity:0;transition:opacity .2s;will-change:transform";
-  w.innerHTML = '<div style="position:relative;transition:transform .45s cubic-bezier(.34,1.56,.64,1)"><span style="position:absolute;left:-3.6px;top:3px;width:7.2px;height:22px;border-radius:8px;background:#121212;box-shadow:0 0 0 2px #fff;transform:rotate(38deg);transform-origin:50% 0"></span><span style="position:absolute;left:-15px;top:-15px;width:30px;height:30px;border-radius:50%;background:#121212;box-shadow:0 0 0 2px #fff,0 10px 22px -8px rgba(255,214,10,.9);display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:50%;background:#FFD60A;transition:transform .45s cubic-bezier(.34,1.56,.64,1)"></span></span></div>';
-  document.body.appendChild(w);
-  const inner = w.firstChild as HTMLElement, dot = (inner.lastChild as HTMLElement).firstChild as HTMLElement;
-  let tx = -100, ty = -100, x = tx, y = ty, rot = 0, hover = false, down = false;
-  const paint = () => {
-    inner.style.transform = down ? "translateY(-7px) rotate(-16deg) scale(.86)" : hover ? "rotate(-8deg) scale(1.3)" : "none";
-    dot.style.transform = hover ? "scale(1.3)" : "none";
-  };
-  let raf = 0;
-  const tick = () => {
-    const px = x; x += (tx - x) * 0.32; y += (ty - y) * 0.32;
-    rot += (Math.max(-24, Math.min(24, (x - px) * 1.4)) - rot) * 0.14;
-    w.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg)`;
-    raf = requestAnimationFrame(tick);
-  };
-  const move = (e: MouseEvent) => {
-    tx = e.clientX; ty = e.clientY;
-    if (x < -50) { x = tx; y = ty; }
-    const t = e.target instanceof Element ? e.target : null;
-    w.style.opacity = t && t.closest("input,textarea") ? "0" : "1";
-    const h = !!(t && t.closest("a,button,[role=button],label"));
-    if (h !== hover) { hover = h; paint(); }
-  };
-  const dn = () => { down = true; paint(); };
-  const up = (e: MouseEvent) => { down = false; paint(); ripple(e.clientX, e.clientY); };
-  const out = (e: MouseEvent) => { if (!e.relatedTarget) w.style.opacity = "0"; };
-  addEventListener("mousemove", move); addEventListener("mousedown", dn); addEventListener("mouseup", up); document.addEventListener("mouseout", out);
-  raf = requestAnimationFrame(tick);
-  return () => {
-    cancelAnimationFrame(raf);
-    removeEventListener("mousemove", move); removeEventListener("mousedown", dn); removeEventListener("mouseup", up); document.removeEventListener("mouseout", out);
-    w.remove(); st.remove();
-  };
-}
-
 export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defaultTab = "vehicles", showAuctions = true }: Props) {
   const [tab, setTab] = useState<Tab>(defaultTab);
   const [rateOf, setRateOf] = useState<string | null>(null);
@@ -278,14 +227,11 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
       anim.addEventListener("data_failed", endSplash);
     });
 
-    const cursorOff = setupCursor();
-
     return () => {
       cancelled = true;
       timers.forEach(clearTimeout);
       anim?.destroy();
       io?.disconnect();
-      cursorOff?.();
       document.body.style.overflow = "";
     };
   }, []);
