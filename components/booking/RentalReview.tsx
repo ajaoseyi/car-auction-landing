@@ -21,8 +21,8 @@ export default function RentalReview({ slug }: { slug: string }) {
 
   useEffect(() => {
     const d = readDraft(slug);
-    // Review needs the pickup from step 1.
-    if (!d?.pickupAt || !d.pickupAddress) router.replace(d ? `/rentals/${slug}/book` : `/rentals/${slug}`);
+    // Review needs the pickup and phone number from step 1.
+    if (!d?.pickupAt || !d.pickupAddress || !d.phone) router.replace(d ? `/rentals/${slug}/book` : `/rentals/${slug}`);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage is only readable after hydration
     else setDraft(d);
   }, [slug, router]);
@@ -73,6 +73,7 @@ function Review({ listing, draft }: { listing: RentalListing; draft: StoredDraft
           pickupAddress: draft.pickupAddress,
           dropoffAddress: draft.dropoffAddress,
           note: draft.note,
+          phone: draft.phone,
           acceptTerms: true,
         },
         attemptKey(),
@@ -109,6 +110,7 @@ function Review({ listing, draft }: { listing: RentalListing; draft: StoredDraft
     { label: isBoat ? "Departs" : "Pickup", value: draft.pickupAt ? formatPickup(draft.pickupAt) : "—" },
     { label: "From", value: draft.pickupAddress || "Add a pickup address" },
     ...(draft.dropoffAddress ? [{ label: "Drop-off", value: draft.dropoffAddress }] : []),
+    { label: "Phone", value: draft.phone ?? "—" },
     ...(draft.note ? [{ label: "Note", value: draft.note }] : []),
     { label: "Booking", value: quote?.summary ?? "—" },
   ];

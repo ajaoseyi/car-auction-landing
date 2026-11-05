@@ -62,6 +62,8 @@ export type RentalBooking = {
   pickupAddress: string;
   dropoffAddress: string | null;
   note: string | null;
+  /** The customer's contact number, when they gave one. */
+  phone: string | null;
   lines: { label: string; amount: number }[];
   rental: number;
   vat: number;

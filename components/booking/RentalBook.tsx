@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { readDraft, writeDraft, type StoredDraft } from "@/lib/draft";
 import { formatHour, formatNaira } from "@/lib/format";
+import { isValidPhone, normalizePhone } from "@/lib/phone";
 import { getListing } from "@/lib/rentals";
 import type { BoatRates, RentalListing } from "@/lib/rentalModels";
 import { BOAT_DAY_HOURS, RENTAL_MAX_ADVANCE_DAYS, RENTAL_MAX_HOURS, RENTAL_MIN_LEAD_MINUTES, boatCharters, tryQuote, ZONE_LABEL } from "@/lib/rentalPricing";
@@ -85,11 +86,15 @@ function BookForm({ listing, initial }: { listing: RentalListing; initial: Store
   const [pickup, setPickup] = useState(initial.pickupAddress ?? (isBoat ? (listing.base ?? "") : ""));
   const [drop, setDrop] = useState(initial.dropoffAddress ?? "");
   const [note, setNote] = useState(initial.note ?? "");
+  const [phone, setPhone] = useState(initial.phone ?? "");
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const quote = tryQuote(listing, { plan, hours, zone });
   const slotOk = bookable(day, time);
-  const canContinue = !!quote && slotOk && pickup.trim().length >= 3;
+  const addressOk = pickup.trim().length >= 3;
+  const phoneOk = isValidPhone(phone);
+  const canContinue = !!quote && slotOk && addressOk && phoneOk;
 
   const setH = (v: number) => {
     const clamped = Math.max(minHours, Math.min(isBoat ? BOAT_DAY_HOURS : RENTAL_MAX_HOURS, v));
@@ -146,6 +151,7 @@ function BookForm({ listing, initial }: { listing: RentalListing; initial: Store
       pickupAddress: pickup.trim(),
       dropoffAddress: drop.trim() || undefined,
       note: note.trim() || undefined,
+      phone: normalizePhone(phone),
       // Changing the trip means a new booking attempt.
       attemptKey: undefined,
     });
@@ -289,6 +295,28 @@ function BookForm({ listing, initial }: { listing: RentalListing; initial: Store
           </div>
 
           <div className={s.section}>
+            <h2 className={s.h2}>Your phone number</h2>
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => setPhoneTouched(true)}
+              placeholder="e.g. 0803 123 4567"
+              aria-label="Phone number"
+              aria-invalid={phoneTouched && !phoneOk}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              maxLength={20}
+              className={s.field}
+            />
+            {phoneTouched && !phoneOk ? (
+              <p className={s.err}>Enter a phone number we can reach you on, like 0803 123 4567.</p>
+            ) : (
+              <p className={s.meta}>Your {listing.crewRole.toLowerCase()} calls this number on the day.</p>
+            )}
+          </div>
+
+          <div className={s.section}>
             <h2 className={s.h2}>Note for your {listing.crewRole.toLowerCase()}</h2>
             <input
               value={note}
@@ -323,7 +351,7 @@ function BookForm({ listing, initial }: { listing: RentalListing; initial: Store
           </Bar>
           {!canContinue && quote && slotOk && (
             <p className={cx(s.meta, s.deskOnly)} style={{ justifyContent: "center" }}>
-              Add a pickup address to continue
+              {!addressOk && !phoneOk ? "Add a pickup address and phone number to continue" : !addressOk ? "Add a pickup address to continue" : "Add your phone number to continue"}
             </p>
           )}
         </aside>

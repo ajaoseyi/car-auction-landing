@@ -44,6 +44,24 @@ function WhatsAppButton({ href, tall, onClick }: { href: string; tall?: boolean;
   );
 }
 
+// ---------- Contact ----------
+/** Brand marks lucide doesn't ship (X, TikTok) plus Instagram, drawn inline so they match the mask icons. */
+const BRAND: Record<"instagram" | "x" | "tiktok", ReactNode> = {
+  instagram: <><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" /></>,
+  x: <path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z" />,
+  tiktok: <path fill="currentColor" d="M16.6 2h-3.3v13.2a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9a6.3 6.3 0 1 0 5.3 6.2V8.6a7.8 7.8 0 0 0 4.4 1.4V6.7a4.4 4.4 0 0 1-4.4-4.4Z" />,
+};
+
+type Contact = { label: string; value: string; href: string; icon: string; brand?: keyof typeof BRAND; dot: string };
+const HANDLE = "carlotngn";
+const CONTACTS: Contact[] = [
+  { label: "Call us", value: "0706 869 2728", href: "tel:+2347068692728", icon: "phone", dot: "#FFD60A" },
+  { label: "Email", value: "carlotngn@gmail.com", href: "mailto:carlotngn@gmail.com", icon: "mail", dot: "#C4B5FD" },
+  { label: "Instagram", value: `@${HANDLE}`, href: `https://instagram.com/${HANDLE}`, icon: "", brand: "instagram", dot: "#FBCFE8" },
+  { label: "X", value: `@${HANDLE}`, href: `https://x.com/${HANDLE}`, icon: "", brand: "x", dot: "#E5E7EB" },
+  { label: "TikTok", value: `@${HANDLE}`, href: `https://www.tiktok.com/@${HANDLE}`, icon: "", brand: "tiktok", dot: "#A7F3D0" },
+];
+
 // ---------- Fleet + rate cards ----------
 /** null: not offered; ON_REQUEST: quoted by message, not booked online. */
 type RateRow = [string, ...(number | null | typeof ON_REQUEST)[]];
@@ -287,6 +305,7 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
           {/* <a href="#rent" onClick={() => pickTab("boats")} className={styles.navLink}><Icon name="sailboat" />Boats</a> */}
           <a href="#how" className={styles.navLink}><Icon name="list-ordered" />How it works</a>
           {showAuctions && <a href="#auctions" className={styles.navLink}><Icon name="gavel" />Auctions</a>}
+          <a href="#contact" className={styles.navLink}><Icon name="phone" />Contact</a>
         </nav>
         {signedIn ? (
           <Link href="/bookings" className={styles.headerCta}>
@@ -415,6 +434,34 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
             </div>
           </section>
         )}
+
+        <section id="contact" className={`${styles.section} ${styles.contact}`}>
+          <div className={styles.headCol}>
+            <span data-reveal="" className={styles.eyebrow}>03 · CONTACT US</span>
+            <h2 data-reveal="" className={styles.h2}>Questions? <Hl>Talk to us.</Hl></h2>
+          </div>
+          <ul className={styles.contactGrid}>
+            {CONTACTS.map(c => {
+              const external = c.href.startsWith("http");
+              return (
+                <li key={c.label} data-reveal="">
+                  <a href={c.href} {...(external ? { target: "_blank", rel: "noopener" } : {})} className={styles.contactCard}>
+                    <span className={styles.contactDot} style={{ background: c.dot }}>
+                      {c.brand
+                        ? <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">{BRAND[c.brand]}</svg>
+                        : <Icon name={c.icon} size={22} />}
+                    </span>
+                    <span className={styles.contactText}>
+                      <span className={styles.eyebrow}>{c.label.toUpperCase()}</span>
+                      <span className={styles.contactValue}>{c.value}</span>
+                    </span>
+                    <span className={styles.contactArrow}><Icon name="arrow-up-right" size={16} /></span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
 
         <section id="join" className={styles.join}>
           <span data-reveal="" className={styles.eyebrow}>READY WHEN YOU ARE</span>

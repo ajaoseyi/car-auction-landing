@@ -10,6 +10,8 @@ export type CreateBookingBody = {
   pickupAddress: string;
   dropoffAddress?: string;
   note?: string;
+  /** Who the crew calls on the day. The API emails it to ops with the paid order. */
+  phone?: string;
   acceptTerms: true;
 };
 

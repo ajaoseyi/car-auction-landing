@@ -4,7 +4,12 @@ import type { RentalDraft } from "./rentalModels";
 // sessionStorage so a refresh keeps it; every access is guarded because storage can
 // be blocked (private windows, previews).
 
-export type StoredDraft = RentalDraft & { /** One per checkout attempt, so a double click or retry can't book twice. */ attemptKey?: string };
+export type StoredDraft = RentalDraft & {
+  /** One per checkout attempt, so a double click or retry can't book twice. */
+  attemptKey?: string;
+  /** The customer's contact number, sent with the booking. */
+  phone?: string;
+};
 
 const key = (slug: string) => `carlot-draft:${slug}`;
 
