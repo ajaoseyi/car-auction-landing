@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { readDraft, writeDraft } from "@/lib/draft";
 import { formatNaira } from "@/lib/format";
 import { getListing } from "@/lib/rentals";
-import type { BoatRates, RentalListing, RentalZone } from "@/lib/rentalModels";
+import type { BoatRates, RentalListing, RentalZone, VehicleRates } from "@/lib/rentalModels";
 import { BOAT_DAY_HOURS, boatCharters, tryQuote, ZONE_LABEL } from "@/lib/rentalPricing";
 import { BackButton, Bar, Icon, LoadState, Photo, PrimaryButton, Segmented, Shell, cx, s, useRequest } from "./kit";
 
@@ -41,7 +41,9 @@ function Detail({ listing }: { listing: RentalListing }) {
   const images = listing.images.length ? listing.images : [""];
   const n = images.length;
   // Interstate is booked by the day; picking a shorter duration falls back to the island.
-  const effectiveZone: RentalZone = zone === "interstate" && duration !== "24" ? "island" : zone;
+  const interstateOnline = !isBoat && (listing.rates as VehicleRates).h24.interstate != null;
+  const interstateOk = interstateOnline && duration === "24";
+  const effectiveZone: RentalZone = zone === "interstate" && !interstateOk ? "island" : zone;
   const plan = !isBoat && duration === "airport" ? "airport" : "hours";
   const hours = isBoat ? charter : duration === "airport" ? 3 : Number(duration);
   const quote = tryQuote(listing, { plan, hours, zone: isBoat ? undefined : effectiveZone });
@@ -93,11 +95,12 @@ function Detail({ listing }: { listing: RentalListing }) {
             label="Zone"
             value={effectiveZone}
             onChange={setZone}
-            options={(["island", "outskirts", "interstate"] as const).map((z) => ({ key: z, label: ZONE_LABEL[z], disabled: z === "interstate" && duration !== "24" }))}
+            options={(["island", "outskirts", "interstate"] as const).map((z) => ({ key: z, label: ZONE_LABEL[z], disabled: z === "interstate" && !interstateOk }))}
           />
         </div>
       )}
       <p className={s.text}>{fuel}</p>
+      {!isBoat && !interstateOnline && <p className={s.text}>Interstate trips for this car are on request. Message us and we&apos;ll quote your route.</p>}
     </>
   );
 

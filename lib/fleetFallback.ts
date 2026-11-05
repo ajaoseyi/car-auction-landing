@@ -1,18 +1,18 @@
 import type { RentalListing } from "./rentalModels";
 
-// The fleet as seeded by car-auction-app-backend (migrations/0008_rentals.sql), shown
+// The fleet and its Dec 2026 rate card (Carlot_Rental_Rates_Dec2026.pdf), shown
 // while the API loads or when it can't be reached. Ids equal slugs here; real bookings
 // always use the listing the API returns.
 
 const VEHICLE_PERKS = ["Cleaned before every trip", "Driver included", "Full tank, no extra", "1 free stop"];
 const u = (id: string) => `https://images.unsplash.com/photo-${id}?w=1280&q=70&auto=format&fit=crop`;
 
-const vehicle = (l: Omit<RentalListing, "id" | "kind" | "perks" | "crewRole" | "base" | "minHours" | "highlight" | "meta">): RentalListing => ({
+const vehicle = (l: Omit<RentalListing, "id" | "kind" | "perks" | "crewRole" | "base" | "minHours" | "highlight" | "meta"> & { meta?: string }): RentalListing => ({
+  highlight: "Fresh · driver",
+  meta: "Island & outskirts · Interstate",
   ...l,
   id: l.slug,
   kind: "vehicle",
-  highlight: "Fresh · driver",
-  meta: "Island & outskirts · Interstate",
   perks: VEHICLE_PERKS,
   crewRole: "Chauffeur",
   base: null,
@@ -38,19 +38,42 @@ export const FALLBACK_FLEET: RentalListing[] = [
     shortName: "Hilux",
     tag: "Pickup · 5 seats",
     specs: "Pickup · 5 seats · Double cab",
-    badge: "new",
-    images: [u("1641333326784-24a9c21d3c4e")],
-    rates: { airport: { island: 170000, outskirts: 200000 }, h6: { island: 220000, outskirts: 270000 }, h12: { island: 320000, outskirts: 370000 }, h24: { island: 570000, outskirts: 670000, interstate: 700000 } },
+    badge: null,
+    images: ["/rentals/toyota-hilux-front34.jpeg"],
+    rates: { airport: { island: 170000, outskirts: 220000 }, h6: { island: 170000, outskirts: 220000 }, h12: { island: 240000, outskirts: 440000 }, h24: { island: 580000, outskirts: 680000, interstate: 780000 } },
   }),
   vehicle({
-    slug: "toyota-land-cruiser",
-    name: "Toyota Land Cruiser",
-    shortName: "Land Cruiser",
+    slug: "lexus-gx460",
+    name: "Lexus GX460",
+    shortName: "GX460",
     tag: "SUV · 7 seats",
-    specs: "SUV · 7 seats",
-    badge: null,
-    images: [u("1650530579355-7ad9d4766043")],
-    rates: { airport: { island: 170000, outskirts: 220000 }, h6: { island: 200000, outskirts: 250000 }, h12: { island: 270000, outskirts: 320000 }, h24: { island: 370000, outskirts: 420000, interstate: 450000 } },
+    specs: "SUV · 7 seats · Luxury",
+    badge: "new",
+    meta: "Island & outskirts · Interstate on request",
+    images: ["front34", "front", "side", "rear", "cabin", "rear-seats"].map((n) => `/rentals/lexus-gx460-${n}.jpeg`),
+    rates: { airport: { island: 170000, outskirts: 230000 }, h6: { island: 170000, outskirts: 230000 }, h12: { island: 230000, outskirts: 340000 }, h24: { island: 400000, outskirts: 460000, interstate: null } },
+  }),
+  vehicle({
+    slug: "cadillac-escalade",
+    name: "Cadillac Escalade",
+    shortName: "Escalade",
+    tag: "SUV · 7 seats",
+    specs: "SUV · 7 seats · Captain chairs",
+    badge: "new",
+    meta: "Island & outskirts · Interstate on request",
+    images: ["front", "front34", "rear-seats", "captain"].map((n) => `/rentals/cadillac-escalade-${n}.jpeg`),
+    rates: { airport: { island: 690000, outskirts: 790000 }, h6: { island: 690000, outskirts: 790000 }, h12: { island: 920000, outskirts: 1040000 }, h24: { island: 1610000, outskirts: 1840000, interstate: null } },
+  }),
+  vehicle({
+    slug: "lexus-lx600",
+    name: "Lexus LX600",
+    shortName: "LX600",
+    tag: "SUV · 7 seats",
+    specs: "SUV · 7 seats · Flagship",
+    badge: "new",
+    meta: "Island & outskirts · Interstate on request",
+    images: ["/lexus-lx600-sm.jpg"],
+    rates: { airport: { island: 790000, outskirts: 890000 }, h6: { island: 790000, outskirts: 890000 }, h12: { island: 1150000, outskirts: 1380000 }, h24: { island: 1840000, outskirts: 2070000, interstate: null } },
   }),
   boat({
     slug: "azimut-42-flybridge",

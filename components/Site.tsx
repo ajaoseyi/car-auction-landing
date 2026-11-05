@@ -5,8 +5,6 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Reac
 import Link from "next/link";
 import type { AnimationItem } from "lottie-web";
 import { isRegistered, useAuth } from "@/lib/auth";
-import { rentals } from "@/lib/rentals";
-import type { BoatRates, RentalListing, VehicleRates } from "@/lib/rentalModels";
 import HeroJourney from "./HeroJourney";
 import styles from "./Site.module.css";
 
@@ -47,7 +45,9 @@ function WhatsAppButton({ href, tall, onClick }: { href: string; tall?: boolean;
 }
 
 // ---------- Fleet + rate cards ----------
-type RateRow = [string, ...(number | null)[]];
+/** null: not offered; ON_REQUEST: quoted by message, not booked online. */
+type RateRow = [string, ...(number | null | typeof ON_REQUEST)[]];
+const ON_REQUEST = "On request";
 type Item = {
   /** Route to the listing's booking flow: /rentals/[slug]. */
   slug: string;
@@ -56,14 +56,16 @@ type Item = {
 };
 
 const f = (n: number) => "₦" + n.toLocaleString("en-US");
-const vRows = (c: number[]): RateRow[] => [["Airport (1–3 hrs)", c[0], c[1], null], ["6 hours", c[2], c[3], null], ["12 hours", c[4], c[5], null], ["24 hours", c[6], c[7], c[8]]];
+const vRows = (c: (number | null)[]): RateRow[] => [["Airport (1–3 hrs)", c[0], c[1], null], ["6 hours", c[2], c[3], null], ["12 hours", c[4], c[5], null], ["24 hours", c[6], c[7], c[8] ?? ON_REQUEST]];
 const bRows = (c: (number | null)[]): RateRow[] => [["2 hours", c[0]], ["3 hours", c[1]], ["4 hours", c[2]], ["Full day (8 hrs)", c[3]]];
 const HOT: [string, string, string] = ["HOT", "#FF5A36", "#fff"], NEW: [string, string, string] = ["NEW", "#FFD60A", "#121212"];
 
 const V: Item[] = [
   { slug: "toyota-prado-txl", key: "prado", src: "/rentals/prado-front.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Toyota Land Cruiser Prado TX-L", meta: "Island, outskirts, interstate", badge: HOT, rows: vRows([120000, 170000, 120000, 170000, 170000, 220000, 270000, 320000, 350000]) },
-  { slug: "toyota-hilux", key: "hilux", src: "https://images.unsplash.com/photo-1641333326784-24a9c21d3c4e?w=900&q=70&auto=format&fit=crop", credit: "Photo: Isaac Mitchell / Unsplash", creditHref: "https://unsplash.com/@isaactmitchell", tag: "Pickup · 5 seats", extra: "Fresh · driver", name: "Toyota Hilux", meta: "Island, outskirts, interstate", badge: NEW, rows: vRows([170000, 200000, 220000, 270000, 320000, 370000, 570000, 670000, 700000]) },
-  { slug: "toyota-land-cruiser", key: "lc", src: "https://images.unsplash.com/photo-1650530579355-7ad9d4766043?w=900&q=70&auto=format&fit=crop", credit: "Photo: Tim Vegas / Unsplash", creditHref: "https://unsplash.com/@tim_media", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Toyota Land Cruiser", meta: "Island, outskirts, interstate", rows: vRows([170000, 220000, 200000, 250000, 270000, 320000, 370000, 420000, 450000]) },
+  { slug: "toyota-hilux", key: "hilux", src: "/rentals/toyota-hilux-front34.jpeg", tag: "Pickup · 5 seats", extra: "Fresh · driver", name: "Toyota Hilux", meta: "Island, outskirts, interstate", rows: vRows([170000, 220000, 170000, 220000, 240000, 440000, 580000, 680000, 780000]) },
+  { slug: "lexus-gx460", key: "gx460", src: "/rentals/lexus-gx460-front34.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Lexus GX460", meta: "Island, outskirts", badge: NEW, rows: vRows([170000, 230000, 170000, 230000, 230000, 340000, 400000, 460000, null]) },
+  { slug: "cadillac-escalade", key: "escalade", src: "/rentals/cadillac-escalade-front.jpeg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Cadillac Escalade", meta: "Island, outskirts", badge: NEW, rows: vRows([690000, 790000, 690000, 790000, 920000, 1040000, 1610000, 1840000, null]) },
+  { slug: "lexus-lx600", key: "lx600", src: "/lexus-lx600-sm.jpg", tag: "SUV · 7 seats", extra: "Fresh · driver", name: "Lexus LX600", meta: "Island, outskirts", badge: NEW, rows: vRows([790000, 890000, 790000, 890000, 1150000, 1380000, 1840000, 2070000, null]) },
 ].map(x => ({ ...x, isV: true }));
 
 const B: Item[] = [
@@ -72,27 +74,7 @@ const B: Item[] = [
   { slug: "princess-52-cruiser", key: "princess", src: "https://images.unsplash.com/photo-1562281302-809108fd533c?w=900&q=70&auto=format&fit=crop", credit: "Photo: Eugene Chystiakov / Unsplash", creditHref: "https://unsplash.com/@eugenechystiakov", tag: "Cruiser · 15 guests", extra: "Captain & crew", name: "Princess 52 Cruiser", meta: "Victoria Island · min. 3 hrs", badge: NEW, rows: bRows([null, 2700000, 3400000, 6200000]) },
 ];
 
-const BADGE = { hot: HOT, new: NEW } as const;
-
-/** A listing from the API as a fleet card (photo credits stay with the built-in cards). */
-function toItem(l: RentalListing): Item {
-  const local = [...V, ...B].find(x => x.slug === l.slug);
-  const isV = l.kind === "vehicle";
-  let rows: RateRow[];
-  if (isV) {
-    const r = l.rates as VehicleRates;
-    rows = vRows([r.airport.island, r.airport.outskirts, r.h6.island, r.h6.outskirts, r.h12.island, r.h12.outskirts, r.h24.island, r.h24.outskirts, r.h24.interstate]);
-  } else {
-    const r = l.rates as BoatRates;
-    rows = bRows([r.h2, r.h3, r.h4, r.day]);
-  }
-  return {
-    slug: l.slug, key: l.slug, src: local?.src ?? l.images[0] ?? "", credit: local?.credit, creditHref: local?.creditHref,
-    tag: l.tag, extra: l.highlight, name: l.name, meta: local?.meta ?? l.meta, badge: l.badge ? BADGE[l.badge] : undefined, rows, isV,
-  };
-}
-
-const minOf = (x: Item) => Math.min(...x.rows.flatMap(r => r.slice(1) as (number | null)[]).filter((v): v is number => v != null));
+const minOf = (x: Item) => Math.min(...x.rows.flatMap(r => r.slice(1)).filter((v): v is number => typeof v === "number"));
 
 const STEPS = [
   { n: "01", t: "Pick a car or boat", d: "Every car comes with a driver. Every boat comes with a captain.", tag: "Driver or captain", icon: "car", tagIcon: "user-round", dot: "#FFD60A", glow: "rgba(255,214,10,.9)" },
@@ -106,8 +88,11 @@ function RatesDialog({ sel, onClose }: { sel: Item; onClose: () => void }) {
   const incl: [string, string][] = [[isV ? "Driver included" : "Captain included", isV ? "user-round" : "ship"], ["Fuel included", "fuel"], ["No hidden fees", "badge-check"]];
   const grid = isV ? "minmax(0,1.3fr) repeat(3,minmax(0,1fr))" : "minmax(0,1.6fr) minmax(0,1fr)";
   const cols = isV ? ["DURATION", "ISLAND", "OUTSKIRTS", "INTERSTATE"] : ["CHARTER", "PRICE"];
+  const onRequest = sel.rows.some(r => r.includes(ON_REQUEST));
   const note = isV
-    ? "Interstate is 24-hour bookings only, with one full tank at departure from Lagos. Extra hours are 15% of the booking rate per hour."
+    ? onRequest
+      ? "Interstate trips are quoted on request. Extra hours are 15% of the booking rate per hour."
+      : "Interstate is 24-hour bookings only, with one full tank at departure from Lagos. Extra hours are 15% of the booking rate per hour."
     : "Fuel, captain and life jackets included. Departure times are confirmed by your captain after booking.";
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -133,7 +118,7 @@ function RatesDialog({ sel, onClose }: { sel: Item; onClose: () => void }) {
                 <span className={styles.rowLabel}>{label}</span>
                 {cells.map((v, i) => (
                   <span key={i} className={styles.cell} style={{ color: v == null ? "#C9C8C2" : "#121212" }}>
-                    {v == null ? "—" : f(v) + (isV && i === 2 ? "+" : "")}
+                    {v == null ? "—" : v === ON_REQUEST ? v : f(v) + (isV && i === 2 ? "+" : "")}
                   </span>
                 ))}
               </div>
@@ -253,9 +238,9 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
   const [tab, setTab] = useState<Tab>(defaultTab);
   const [rateOf, setRateOf] = useState<string | null>(null);
   const [splash, setSplash] = useState<SplashPhase>("in");
-  // The built-in fleet shows until the API answers; booking always goes through the API.
-  const [fleetV, setFleetV] = useState<Item[]>(V);
-  const [fleetB, setFleetB] = useState<Item[]>(B);
+  // Cards follow the Dec 2026 rate card; each one opens the booking flow, which prices from the API.
+  const fleetV = V;
+  const fleetB = B;
   const { user } = useAuth();
   const signedIn = isRegistered(user);
 
@@ -303,18 +288,6 @@ export default function Site({ whatsappUrl = "https://chat.whatsapp.com/", defau
       cursorOff?.();
       document.body.style.overflow = "";
     };
-  }, []);
-
-  // Live fleet and rates from the API.
-  useEffect(() => {
-    let live = true;
-    rentals.list().then(list => {
-      if (!live || !list.length) return;
-      const items = list.map(toItem);
-      setFleetV(items.filter(x => x.isV));
-      setFleetB(items.filter(x => !x.isV));
-    }, () => {});
-    return () => { live = false; };
   }, []);
 
   const pickTab = useCallback((t: Tab) => {

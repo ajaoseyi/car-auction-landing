@@ -1,6 +1,6 @@
 // A copy of quoteRental in the backend's packages/contracts (rentals.ts), so
 // prices update as the user taps. The server reprices every booking with the
-// same rules; keep the two in step.
+// same rules; keep the two in step. (Site-only change: interstate may be null, "on request".)
 import type { BoatRates, RentalKind, RentalPlan, RentalZone, VehicleRates } from "./rentalModels";
 
 export const RENTAL_VAT_BPS = 750;
@@ -65,15 +65,16 @@ export function quoteRental(listing: Priceable, input: { plan?: RentalPlan; hour
     lines.push({ label: "Airport run", amount: r.airport[zone] });
     return done(plan, RENTAL_AIRPORT_HOURS, zone, `Airport run · ${ZONE_LABEL[zone]}`, lines, false);
   }
+  if (zone === "interstate" && r.h24.interstate == null) throw new RentalQuoteError("Interstate trips for this car are on request.");
   if (zone === "interstate" && hours < 24) throw new RentalQuoteError("Interstate trips are booked for 24 hours or more.");
   const fullDays = Math.floor(hours / 24);
   const rem = hours % 24;
-  if (fullDays) lines.push({ label: `${fullDays} × 24 hrs`, amount: fullDays * r.h24[zone] });
+  if (fullDays) lines.push({ label: `${fullDays} × 24 hrs`, amount: fullDays * r.h24[zone]! });
   if (rem) {
     // Leftover hours on an interstate trip are billed at outskirts rates, except a near-full day.
     const tier = rem <= 6 ? 6 : rem <= 12 ? 12 : 24;
     const z = zone === "interstate" && tier !== 24 ? "outskirts" : zone;
-    const amount = tier === 6 ? r.h6[z as "island" | "outskirts"] : tier === 12 ? r.h12[z as "island" | "outskirts"] : r.h24[z];
+    const amount = tier === 6 ? r.h6[z as "island" | "outskirts"] : tier === 12 ? r.h12[z as "island" | "outskirts"] : r.h24[z]!;
     lines.push({ label: rem === tier ? `${tier} hrs rate` : `${hrs(rem)} → ${tier} hrs rate`, amount });
   }
   return done(plan, hours, zone, `${hrs(hours)} · ${ZONE_LABEL[zone]}`, lines, zone === "interstate");

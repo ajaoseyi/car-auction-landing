@@ -12,7 +12,8 @@ export type VehicleRates = {
   airport: IslandOutskirts;
   h6: IslandOutskirts;
   h12: IslandOutskirts;
-  h24: IslandOutskirts & { interstate: number };
+  /** interstate is null when it's quoted on request rather than booked online. */
+  h24: IslandOutskirts & { interstate: number | null };
 };
 
 /** Charter prices for a boat. Null: the boat doesn't do charters that short. */
